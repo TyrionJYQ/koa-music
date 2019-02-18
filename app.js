@@ -27,6 +27,10 @@ render(app, {
 // 引入各个路由对象，并配置中间件
 const musicRouter = require('./routers/musicRouter');
 const userRouter = require('./routers/userRouter');
+const errorHandler = require('./middlewars/errorHandler');
+
+// 请求错误处理
+app.use(errorHandler)
 
 // 解析请求体数据
 app.use(require('koa-bodyparser')());

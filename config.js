@@ -11,6 +11,6 @@ module.exports = {
     host: 'localhost',
     user: 'root',
     password: 'root',
-    database: 'node_music'
+    database: 'koa_music'
   }
 }
