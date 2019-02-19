@@ -24,7 +24,17 @@ obj.doRegister = async ctx => {
   console.log(result);
   if (result.affectedRows !== 1) return ctx.throw(new Error(result.message))
   ctx.body = {code: '001', msg: '注册成功!'}
-} 
+}
+//登录
+obj.doLogin = async ctx => {
+  let {username, passward} = ctx.request.body;
+  let users = await userModel.findUserByUsername(username);
+  if(users.length === 0) return ctx.body = {code: '002', msg: '用户名或密码不正确'};
+  let user = users[0];
+  if(user.password !== passward) return ctx.body = {code: '002', msg: '用户名或者密码不正确'};
+  ctx.body = {code: '001', msg: '登录成功'}
+  ctx.session.user = user
+}
 
 
 module.exports = obj;

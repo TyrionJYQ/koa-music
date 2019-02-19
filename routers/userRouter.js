@@ -14,6 +14,7 @@ router.get('/user/register',(ctx,next)=>{
 })
 .post('/user/checkUsername',userController.checkUsername)
 .post('/user/doRegister', userController.doRegister)
+.post('/user/doLogin', userController.doLogin)
 
 
 

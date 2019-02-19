@@ -41,6 +41,13 @@ app.use(rewriteUrl(rewriteUrlArray));
 // 处理静态资源,path.resolve将相对路径变为绝对路径
 app.use(require('koa-static')(path.resolve('./public') ));
 
+// session start
+const session = require('koa-session');
+let {sessionConfig, sessionKey} = require('./config')
+app.keys = [sessionKey]
+app.use(session(sessionConfig, app));
+// session end
+
 // 路由
 app.use(musicRouter.routes());
 app.use(userRouter.routes());
