@@ -1,3 +1,4 @@
+const path = require('path')
 module.exports = {
   rewriteUrlArray: [
     {src: '/a', dist: '/user/login'},
@@ -27,5 +28,9 @@ module.exports = {
   routeList: [
     /^\/music\/.*$/,
     '/user/logout'
-  ]
+  ],
+  renderRootDir: path.resolve('./views'), //页面文件路径
+  staticDir: path.resolve('./public'), // 静态资源路径
+  uploadDir: path.resolve('./public/files') //上传文件路径
+
 }

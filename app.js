@@ -1,5 +1,5 @@
 const Koa = require('koa');
-const { port, rewriteUrlArray, sessionConfig, sessionKey, routeList} = require('./config')
+const { port, rewriteUrlArray, sessionConfig, sessionKey, routeList, renderRootDir, staticDir, uploadDir} = require('./config')
 // 创建服务器对象
 let app = new Koa(); 
 
@@ -9,10 +9,8 @@ app.listen(port,()=>{
 });
 // art-template
 const render = require('koa-art-template');
-const path = require('path');
-
 render(app, {
-  root: path.join(__dirname, 'views'), // 模板查找路径views
+  root: renderRootDir, // 模板查找路径views
   extname: '.html',
   // 获取环境变量中的NODE_ENV: true : debug 开发
   //    1:  不压缩，不混淆 ，实时更新静态页面
@@ -33,13 +31,13 @@ const errorHandler = require('./middlewars/errorHandler');
 app.use(errorHandler)
 
 // 解析请求体数据
-app.use(require('koa-bodyparser')());
+// app.use(require('koa-bodyparser')()); 与koa-formidable产生冲突，都包含ctx.request
 
 const rewriteUrl = require('./middlewars/rewriteUrl');
 app.use(rewriteUrl(rewriteUrlArray));
 
 // 处理静态资源,path.resolve将相对路径变为绝对路径
-app.use(require('koa-static')(path.resolve('./public') ));
+app.use(require('koa-static')(staticDir));
 
 // handle session start
 
@@ -68,6 +66,12 @@ app.use(session(sessionConfig, app));
 const checkLogin = require('./middlewars/checkLogin')
 app.use(checkLogin(routeList))
 
+// 上传文件
+const formidable = require('koa-formidable');
+app.use(formidable({
+  uploadDir, keepExtensions: true // 保持文件后缀名
+}))
+
 // 路由
 app.use(musicRouter.routes());
 app.use(userRouter.routes());
@@ -85,23 +89,3 @@ app.use(userRouter.allowedMethods() );
 
 
 
-// const db = require('./db.js');
-
-// app.use(async (ctx,next)=>{
-//   let user;
-//     // 查询数据库  结果是一个数组
-//     // 1: await 对应 resolve(参数)
-//     // 2: reject(????)
-//     try {
-//        user= (await db.q('select * from users where id = ?',[1]))[0].username;
-
-//       console.log(user);
-//       // ctx.body = 'haha'; // 响应数据
-//       await ctx.render('index.html',{
-//           msg:user
-//       });
-//     } catch (e) {
-//       // 对应reject(err)
-//       console.log(e);
-//     }   
-// });
