@@ -41,12 +41,27 @@ app.use(rewriteUrl(rewriteUrlArray));
 // 处理静态资源,path.resolve将相对路径变为绝对路径
 app.use(require('koa-static')(path.resolve('./public') ));
 
-// session start
+// handle session start
 const session = require('koa-session');
 let {sessionConfig, sessionKey} = require('./config')
 app.keys = [sessionKey]
+let store = {
+  storage: {},
+  set: function (key, session) {
+    this.storage[key] = session;
+  },
+  get: function (key) {
+    return this.storage[key];
+  },
+  destroy: function (key) {
+    // 通过客户都的cookie钥匙删除session数据
+    delete this.storage[key];
+  }
+};
+sessionConfig.store = store;
 app.use(session(sessionConfig, app));
-// session end
+
+// handle session end
 
 // 路由
 app.use(musicRouter.routes());
