@@ -1,5 +1,5 @@
 const Koa = require('koa');
-const { port, rewriteUrlArray} = require('./config')
+const { port, rewriteUrlArray, sessionConfig, sessionKey, routeList} = require('./config')
 // 创建服务器对象
 let app = new Koa(); 
 
@@ -42,8 +42,9 @@ app.use(rewriteUrl(rewriteUrlArray));
 app.use(require('koa-static')(path.resolve('./public') ));
 
 // handle session start
+
 const session = require('koa-session');
-let {sessionConfig, sessionKey} = require('./config')
+
 app.keys = [sessionKey]
 let store = {
   storage: {},
@@ -62,6 +63,10 @@ sessionConfig.store = store;
 app.use(session(sessionConfig, app));
 
 // handle session end
+
+// 登录验证
+const checkLogin = require('./middlewars/checkLogin')
+app.use(checkLogin(routeList))
 
 // 路由
 app.use(musicRouter.routes());

@@ -23,5 +23,9 @@ module.exports = {
     rolling: false, // 顺延cookie的有效期
     renew: false
   },
-  sessionKey: 'koa music'
+  sessionKey: 'koa music',
+  routeList: [
+    /^\/music\/.*$/,
+    '/user/logout'
+  ]
 }

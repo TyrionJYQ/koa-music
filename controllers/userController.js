@@ -33,7 +33,7 @@ obj.doLogin = async ctx => {
   let user = users[0];
   if(user.password !== passward) return ctx.body = {code: '002', msg: '用户名或者密码不正确'};
   ctx.body = {code: '001', msg: '登录成功'}
-  ctx.session.user = user
+  ctx.session.user = user 
 }
 
 
