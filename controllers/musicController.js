@@ -32,5 +32,40 @@ module.exports = {
     let result = await musicModel.addMusicByMusicInfo(title, singer, time, filePath, lrcPath, uid);
     if (result.affectedRows !== 1) return ctx.throw(new Error(result.message))
     ctx.body = { code: '001', msg: '上传成功!' }
+  },
+  showEditMusic: async(ctx, next) => {
+    // GET请求的参数不能通过ctx.request.body来获取
+    let { id } = ctx.query;
+    let musics = await musicModel.findMusicsByid(id);
+    if (musics.length === 0) return ctx.throw('音乐不存在');
+    await ctx.render('edit', {
+      music: musics[0]
+    })
+  },
+  updateMusic: async (ctx, next) => {
+    let {id, title, singer, time} = ctx.request.body;
+    let {file, filelrc} = ctx.request.files;
+    if(!file || !filelrc) return ctx.throw('未选择音乐或歌词文件');
+    let filePath,lrcPath;
+    // 歌曲路径
+    filePath = path.parse(file.path).base;
+    filePath = '/public/files' + filePath;
+    // 歌词路径
+    lrcPath = path.parse(filelrc.path).base;
+    lrcPath = '/public/files' + lrcPath;
+    // 根据id查询数据库
+    let result = await musicModel.updateMusic(title, singer, time, filePath, lrcPath, id);
+    if (result.affectedRows !== 1) return ctx.throw(result.message);
+    ctx.body = {code: '001', msg: '更新成功'};
+  },
+
+  // 删除音乐
+  deleteMusic: async (ctx, next) => {
+    let { id } = ctx.query;
+    let result = await musicModel.deleteMusic(id)
+    if (result.affectedRows !== 1) return ctx.throw(result.message);
+    ctx.body = { code: '001', msg: '删除成功' };
+
+
   }
 }

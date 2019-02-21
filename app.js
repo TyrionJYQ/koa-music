@@ -1,11 +1,19 @@
 const Koa = require('koa');
-const { port, rewriteUrlArray, sessionConfig, sessionKey, routeList, renderRootDir, staticDir, uploadDir} = require('./config')
+const {
+  port,
+  rewriteUrlArray,
+  sessionConfig,
+  sessionKey,
+  routeList,
+  renderRootDir,
+  staticDir,
+  uploadDir } = require('./config');
 // 创建服务器对象
-let app = new Koa(); 
+let app = new Koa();
 
 // 监听端口
-app.listen(port,()=>{
-    console.log(`服务器成功启动，端口号为${port}`);
+app.listen(port, () => {
+  console.log(`服务器成功启动，端口号为${port}`);
 });
 // art-template
 const render = require('koa-art-template');
@@ -15,7 +23,7 @@ render(app, {
   // 获取环境变量中的NODE_ENV: true : debug 开发
   //    1:  不压缩，不混淆 ，实时更新静态页面
   //    2: debug === false压缩，混淆 ，不实时更新静态页面
-  debug: process.env.NODE_ENV !== 'production', 
+  debug: process.env.NODE_ENV !== 'production',
 });
 
 
@@ -80,7 +88,7 @@ app.use(userRouter.routes());
 // 以下配置可以返回405  方法不匹配
 // 如果客户端使用了元·服务器不能支持的请求方式 比如copy, 返回404
 // 以下配置可以返回501  方法未实现
-app.use(userRouter.allowedMethods() );
+app.use(userRouter.allowedMethods());
 
 
 

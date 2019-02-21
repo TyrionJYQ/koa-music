@@ -10,10 +10,9 @@ router.get('/music/index',musicController.showMusicsByUser)
 .get('/music/addMusic',(ctx,next)=>{
     ctx.render('add');
 })
-.get('/music/edit-music',(ctx,next)=>{
-    ctx.render('edit');
-})
-.post
+.get('/music/editMusic', musicController.showEditMusic)
+.put('/music/updateMusic', musicController.updateMusic)
+.delete('/music/deleteMusic', musicController.deleteMusic)
 
 
 // 导出给app。进行配置中间件

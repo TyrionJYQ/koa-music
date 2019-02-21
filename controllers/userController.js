@@ -36,5 +36,12 @@ obj.doLogin = async ctx => {
   ctx.session.user = user 
 }
 
+// 登出
+obj.doLogout = async ctx => {
+  // 清除session
+  ctx.session = null
+  return ctx.body = {code: '001', msg: '成功退出登录!'}
+}
+
 
 module.exports = obj;
