@@ -108,7 +108,6 @@
             register.checkUsername(e.target.value).then(data => {
               if(data.code === '002') {
                 $('#exits').removeClass('hidden').addClass('visible');
-                e.target.value = ''
               } else {
                 $('#exits').removeClass('visible').addClass('hidden');
               }
