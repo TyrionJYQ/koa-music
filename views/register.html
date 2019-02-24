@@ -21,6 +21,15 @@
         display: inline-block;
         float: left;
     }
+    #exits {
+      color: red;
+    }
+    .hidden {
+      visibility: hidden;
+    }
+    .visible {
+      visibility: visible;
+    }
     </style>
     <link href="/public/css/register.css" rel="stylesheet" type="text/css" />
 
@@ -37,13 +46,15 @@
                         <i class="icon icon-delete"></i> <em></em>
                     </li>
                     <li>
-                        <input class="aw-register-name form-control" type="text" name="username" placeholder="用户名" value="" />
+                        <input class="aw-register-name form-control" type="text" name="username" id="username" placeholder="用户名" value="" />
+                        <span id ="exits" class="hidden">用户名已存在</span>
+                      </li>
+                    
+                    <li>
+                        <input class="aw-register-email form-control" type="text" placeholder="邮箱"  id="email" name="email" value="" />
                     </li>
                     <li>
-                        <input class="aw-register-email form-control" type="text" placeholder="邮箱" name="email" value="" />
-                    </li>
-                    <li>
-                        <input class="aw-register-pwd form-control" type="password" name="password" placeholder="密码"  />
+                        <input class="aw-register-pwd form-control" type="password" name="password"  id="passward" placeholder="密码"  />
                     </li>
                     <div id='pwd-level'>
                         <span>密码强度:</span>
@@ -73,4 +84,40 @@
             </form>
         </div>
     </div>
+    <script>
+      (function() {
+        let timer, username = document.querySelector('#username');
+        let register = {
+          waitTime: 1000,  // 等待时间
+          checkUsername: username => {
+            let data = { username: username};
+            let { POST } = Http.config.methods,{ checkUsername } = Http.config.urls;
+            return new Promise((res, rej) => {
+              Http.request(checkUsername, data, POST, 'json', data => {
+                res(data); 
+              }, error => {
+                rej(error);
+              })
+            })
+          }
+        };
+        // 验证用户名是否存在
+        username.addEventListener('input', e => {
+          clearTimeout(timer);
+          timer = setTimeout(() => {
+            register.checkUsername(e.target.value).then(data => {
+              if(data.code === '002') {
+                $('#exits').removeClass('hidden').addClass('visible');
+                e.target.value = ''
+              } else {
+                $('#exits').removeClass('visible').addClass('hidden');
+              }
+            })
+          }, register.waitTime);
+        })
+          
+      })()
+
+      
+    </script>
 {{/block}}
