@@ -5,12 +5,11 @@ module.exports = rules => {
   return async (ctx, next) => {
     console.log(ctx)
     rules.forEach(rule => {
-      
       // 正则判断
-      if(rule.regex) {
+      if (rule.regex) {
         let result = rule.regex.exec(ctx.url)
-        if(result) {
-          if(rule.dist) {
+        if (result) {
+          if (rule.dist) {
             ctx.url = rule.dist
           } else {
             // result[1]是分组内容
