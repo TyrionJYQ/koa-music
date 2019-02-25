@@ -19,7 +19,9 @@ Http.config = {
     },
   },
   urls: {
-    checkUsername: '/user/checkUsername'
+    checkUsername: '/user/checkUsername',
+    doRegister: '/user/doRegister',
+    login: '/user/login'
   }
 }
 Http.request = function (requsetData,success, failed) {

@@ -86,9 +86,15 @@
     </div>
     <script>
       (function() {
-        let timer, username = document.querySelector('#username');
+        let timer;
         let register = {
           delay: 1000,  // 等待时间
+          domEles: {
+            username: document.querySelector('#username'),
+            passward: document.querySelector('#passward'),
+            form: document.querySelector('form')
+          },
+          // 验证用户名是否存在
           checkUsername: username => {
             let reqData = {
               url: 'checkUsername',
@@ -101,14 +107,68 @@
                 rej(error);
               })
             })
+          },
+          // 注册
+          doRegister: data => {
+            let reqData = {
+              url: 'doRegister',
+              data: data
+            }
+            Http.request(reqData, data => {
+              if (data.code === '001') {
+                Swal.fire({
+                  title: '注册成功',
+                  text: '前往登录页面?',
+                  type: 'success',
+                  showCloseButton: true,
+                  showCancelButton: true,
+                  confirmButtonText: '确定',
+                  cancelButtonText: '取消'
+                }).then(result => {
+                  if(result.value) {
+                    window.location = Http.config.urls.login;
+                  }
+                })
+              } else {
+                Swal.fire({
+                  title: '注册失败',
+                  text: data.msg,
+                  type: 'error'
+                })
+              }
+            })
           }
         };
         // 样式切换
         function _toggleClass(selector,classA, classB) {
           $(selector).removeClass(classA).addClass(classB);
         }
+        
+        // 密码强度
+        function _checkPwd(value) {
+          let level = 0, 
+              regex1 = /[0-9]/, // 数字
+              regex2 = /[A-Za-z]/, // 字符
+              regex3 = /[^\w]/; // 非字符
+          if (regex1.test(value)) level++;
+          if (regex2.test(value)) level++;
+          if (regex3.test(value)) level++;
+          return level;
+        }
+        // 密码强度背景色设置
+        function _changeColor(levels) {
+          
+          let divs = document.querySelector('#pwd-level').querySelectorAll('div');
+          let colors = ['red', 'blue', 'green'];
+          divs.forEach(div => div.style.backgroundColor = '');
+          for(let i = 0; i < levels; i++) {
+            divs[i].style.backgroundColor = colors[i];
+          }
+            
+        
+        }
         // 验证用户名是否存在
-        username.addEventListener('input', e => {
+        register.domEles.username.addEventListener('input', e => {
           clearTimeout(timer);
           timer = setTimeout(() => {
             register.checkUsername(e.target.value).then(data => {
@@ -119,8 +179,20 @@
               }
             })
           }, register.delay);
+        });
+        // 验证密码强度
+        register.domEles.passward.addEventListener('input', e => {
+          let levels = _checkPwd(e.target.value);
+          _changeColor(levels);
         })
-          
+        // 注册，这里不能使用箭头函数（this指向window）
+        register.domEles.form.addEventListener('submit', function(e){
+          e.preventDefault();
+          let data = $(this).serialize();
+          register.doRegister(data);
+        })
+
+           
       })()
 
       
