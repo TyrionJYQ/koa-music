@@ -25,9 +25,9 @@ Http.config = {
 Http.request = function (requsetData,success, failed) {
   const {defaultConfig} = Http.config;
   config = {
-    type: requsetData.type || defaultConfig.POST,
-    url:  defaultConfig.urls[requestData.url],
-    data: requestData.data,
+    type: requsetData.type || defaultConfig.methods.POST,
+    url: Http.config.urls[requsetData.url],
+    data: requsetData.data,
     dataType: requsetData.dataType || defaultConfig.dataType 
   }
   $.ajax({
