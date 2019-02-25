@@ -80,6 +80,12 @@ app.use(formidable({
   uploadDir, keepExtensions: true // 保持文件后缀名
 }))
 
+// 回写session
+app.use(async function (ctx, next) {
+  // ctx.state: art-template的视图对象
+  ctx.state.user = ctx.session.user; 
+  await next();
+})
 // 路由
 app.use(musicRouter.routes());
 app.use(userRouter.routes());

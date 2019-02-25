@@ -31,12 +31,12 @@ obj.doRegister = async ctx => {
 }
 //登录
 obj.doLogin = async ctx => {
-  let {username, passward} = ctx.request.body;
+  let {username, password} = ctx.request.body;
   let users = await userModel.findUserByUsername(username);
   if(users.length === 0) return ctx.body = {code: '002', msg: '用户名或密码不正确'};
   let user = users[0];
-  if(user.password !== passward) return ctx.body = {code: '002', msg: '用户名或者密码不正确'};
-  ctx.body = {code: '001', msg: '登录成功'}
+  if(user.password !== password) return ctx.body = {code: '002', msg: '用户名或者密码不正确'};
+  ctx.body = {code: '001', msg: '登录成功'};
   ctx.session.user = user 
 }
 
@@ -50,8 +50,8 @@ obj.getCaptcha = async ctx => {
 // 登出
 obj.doLogout = async ctx => {
   // 清除session
-  ctx.session = null
-  return ctx.body = {code: '001', msg: '成功退出登录!'}
+  ctx.session = null;
+  ctx.redirect('/user/login');
 }
 
 
