@@ -12,7 +12,7 @@ obj.checkUsername = async (ctx,next) => {
 }
 // 注册
 obj.doRegister = async ctx => {
-  let {username, passward, email, v_code} = ctx.request.body
+  let {username, password, email, v_code} = ctx.request.body
   //判断验证码v_code,因为不用查询数据库所以放在前面
   // 验证邮箱合法性
   // 查询数据库，判断用户是否存在
@@ -20,7 +20,7 @@ obj.doRegister = async ctx => {
   // 用户存在
   if(users && users.length !== 0) return ctx.body = {code: '002', msg: '用户名已经存在'};
   // 用户不存在，向数据库中插入该数据
-  let result = await userModel.addUser([username, passward, email]);
+  let result = await userModel.addUser([username, password, email]);
   console.log(result);
   if (result.affectedRows !== 1) return ctx.throw(new Error(result.message))
   ctx.body = {code: '001', msg: '注册成功!'}
