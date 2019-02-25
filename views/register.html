@@ -88,7 +88,7 @@
       (function() {
         let timer, username = document.querySelector('#username');
         let register = {
-          waitTime: 1000,  // 等待时间
+          delay: 1000,  // 等待时间
           checkUsername: username => {
             let data = { username: username};
             let { POST } = Http.config.methods,{ checkUsername } = Http.config.urls;
@@ -101,18 +101,22 @@
             })
           }
         };
+        // 样式切换
+        function _toggleClass(selector,classA, classB) {
+          $(selector).removeClass(classA).addClass(classB);
+        }
         // 验证用户名是否存在
         username.addEventListener('input', e => {
           clearTimeout(timer);
           timer = setTimeout(() => {
             register.checkUsername(e.target.value).then(data => {
               if(data.code === '002') {
-                $('#exits').removeClass('hidden').addClass('visible');
+               _toggleClass('#exits', 'hidden', 'visible');
               } else {
-                $('#exits').removeClass('visible').addClass('hidden');
+               _toggleClass('#exits', 'visible', 'hidden');
               }
             })
-          }, register.waitTime);
+          }, register.delay);
         })
           
       })()
