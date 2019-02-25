@@ -6,7 +6,7 @@ module.exports = {
     {regex: /^\/xx/, dist: '/user/login'},
     {src: '/', dist: '/user/login'},
   ],
-  port: 8888,
+  port: 8889,
   dbConfig: {
     connectionLimit: 10,
     host: 'localhost',

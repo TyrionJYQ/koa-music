@@ -16,7 +16,7 @@ router.get('/user/register',(ctx,next)=>{
 .post('/user/doRegister', userController.doRegister)
 .post('/user/doLogin', userController.doLogin)
 .post('/user/logout', userController.doLogout)
-
+.get('/user/getPic', userController.getCaptcha)
 
 
 // 导出给app。进行配置中间件

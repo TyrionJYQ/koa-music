@@ -1,5 +1,6 @@
 const obj = {};
 const userModel = require('../models/userModel');
+const captchapng = require('captchapng2');
 // 验证用户名是否存在
 obj.checkUsername = async (ctx,next) => {
     // 1: 接收请求体的username
@@ -14,6 +15,9 @@ obj.checkUsername = async (ctx,next) => {
 obj.doRegister = async ctx => {
   let {username, password, email, v_code} = ctx.request.body
   //判断验证码v_code,因为不用查询数据库所以放在前面
+  if(ctx.session.v_code != v_code) {
+    return ctx.body = {code: '002', msg: '验证码不正确'};
+  }
   // 验证邮箱合法性
   // 查询数据库，判断用户是否存在
   let users = await userModel.findUserByUsername(username);
@@ -34,6 +38,13 @@ obj.doLogin = async ctx => {
   if(user.password !== passward) return ctx.body = {code: '002', msg: '用户名或者密码不正确'};
   ctx.body = {code: '001', msg: '登录成功'}
   ctx.session.user = user 
+}
+
+obj.getCaptcha = async ctx => {
+  let rand = parseInt(Math.random() * 9000 + 1000);
+  let png = new captchapng(80, 30, rand); // width,height, numeric captcha
+  ctx.session.v_code = rand;
+  ctx.body = png.getBuffer();
 }
 
 // 登出

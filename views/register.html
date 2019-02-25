@@ -63,8 +63,8 @@
         </div>
         <hr/>
         <li class="aw-register-verify">
-          <img class="pull-right" width="120" src="">
-          <input type="text" class="form-control" name="vcode" placeholder="验证码" />
+          <img class="pull-right" width="120" src="/user/getPic" onclick="this.src='/user/getPic' + '?time=' + Date.now()">
+          <input type="text" class="form-control" id = "vCode" name="v_code" placeholder="验证码" />
         </li>
         <li class="last">
           <label>
@@ -92,7 +92,8 @@
       domEles: {
         username: document.querySelector('#username'),
         passward: document.querySelector('#passward'),
-        form: document.querySelector('form')
+        form: document.querySelector('form'),
+        vCodePic: document.querySelector('#vCode')
       },
       // 验证用户名是否存在
       checkUsername: username => {
