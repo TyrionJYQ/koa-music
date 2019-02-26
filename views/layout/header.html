@@ -1,8 +1,13 @@
 <div class="aw-top-menu-wrap">
   <div class="container1">
+    <!-- 标题栏 -->
+    {{if user}}
+    <span class="css17ce09a6c61f31b header-title">私人音乐</span>
+    {{/if}}
+    <!-- end 标题栏 -->
     <!-- 用户栏 -->
     <div class="aw-user-nav">
-      {{if user}}
+      {{if user}} 
       <a href="" class="aw-user-nav-dropdown">
         您好!{{user.username}}
       </a>
@@ -17,8 +22,8 @@
       {{else}}
       <!-- 登陆&注册栏 -->
       <span>
-        <a class="register btn btn-normal btn-success" href="">注册</a>
-        <a class="login btn btn-normal btn-primary" href="">登录</a>
+        <a class="register btn btn-normal btn-success" href="/user/register">注册</a>
+        <a class="login btn btn-normal btn-primary" href="/user/login">登录</a>
       </span>
       {{/if}}
       <!-- end 登陆&注册栏 -->

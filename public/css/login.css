@@ -242,3 +242,11 @@ body {
         padding: 0 10px !important;
     }
 }
+
+/* 标题位置 */
+.title-pos {
+  position: relative;
+  top: -74px;
+  left: 136px;
+  font-size: 35px;
+}

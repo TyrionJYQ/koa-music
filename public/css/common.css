@@ -4442,7 +4442,7 @@ body {
 }
 
 .aw-login-box .logo {
-    width: 94px !important;
+    /* width: 94px !important; */
     background: url(img/Laravel-Four-Revised-Icon.png) no-repeat !important;
     background-size: contain !important
 }
@@ -4486,4 +4486,16 @@ body {
 
 .aw-login-box .mod-body .side-bar .btn.btn-qq {
     background-image: url(img/qq-login.png)
+}
+
+.header-title {
+  line-height: 50px;
+    /* left: 30px; */
+    margin-left: 30px;
+    font-size: 20px;
+    color: white;
+}
+
+.header-title:hover {
+  cursor: pointer;
 }
