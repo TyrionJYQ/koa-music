@@ -33,7 +33,62 @@
     </div>
 
     <script>
-    
+      // $(this).serialize 对于文件获取的是文件后缀名
+      (function() {
+        // 获取文件上传参数
+        function _getFormData() {
+          let formData = new FormData();
+          let inputs = document.querySelectorAll('input');
+          let title = inputs[0].value;
+          let time = inputs[1].value;
+          let singer = inputs[2].value;
+          let file = inputs[3].files[0];
+          let filelrc = inputs[4].files[0];
+          formData.append('title', title);
+          formData.append('time', time);
+          formData.append('singer', singer);
+          formData.append('file', file);
+          formData.append('filelrc', filelrc);
+          return formData;
+        }
+        // 表单添加提交事件
+        document.querySelector('form').addEventListener('submit', function(e){
+          e.preventDefault();
+          let reqData = {
+            url: 'addMusic',
+            data: _getFormData()
+          }
+          Swal.fire({
+            title: '上传中,请稍后...',
+            text: '',
+            onBeforeOpen: () => {
+              Swal.showLoading();
+            }
+          });
+          Http.upLoadFile(reqData, data => {
+            if(data.code === '001') {
+              Swal.fire({
+                type: 'success',
+                text: '上传成功!',
+                title: '',
+                showCancelButton: true,
+                confirmButtonText: '前往听歌',
+                cancelButtonText: '继续上传'
+              }).then(result => {
+                if(result.value) return window.location = '/music/index';
+                // 继续听歌，清空表单已填写数据
+                document.querySelector('form').reset();
+              })
+            } else {
+              Swal.fire({
+                type: 'error',
+                title: '',
+                text: data.msg
+              })
+            }
+          })
+        })
+      })();
     </script>
 
 {{/block}}

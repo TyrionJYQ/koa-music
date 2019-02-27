@@ -95,7 +95,7 @@
   musics.forEach(music => {
     // 绑定删除事件
     music.addEventListener('click', function(e) {
-      var url = $(this).attr('request-href');
+      let url = $(this).attr('request-href');
       // 发送delete请求
       Http.deleteReq(url, data => {
         if(data.code === '002') return Swal.fire({
@@ -108,7 +108,9 @@
           text: '删除成功!',
           title: '',
           showConfirmButton: false
-        })
+        });
+        let tr = e.target.parentNode.parentNode;
+        tr.parentNode.removeChild(tr);
       }, err => {
         Swal.fire({
           type: 'error',
@@ -116,7 +118,7 @@
           title: '删除失败'
         })
       })
-    })
+    });
   })
 
 
