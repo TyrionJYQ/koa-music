@@ -17,7 +17,15 @@ Http.config = {
     updateMusic: '/music/updateMusic'
   }
 }
-Http.post = function (requsetData, success, failed) {
+Http.get = function(reqData,success, error) {
+  $.ajax({
+    type: 'GET',
+    url: reqData.url,
+    success: success,
+    error: error
+  })
+}
+Http.post = function (requsetData, success, error) {
   const { defaultConfig } = Http.config;
   config = {
     type: 'post',
@@ -32,22 +40,20 @@ Http.post = function (requsetData, success, failed) {
     data: config.data,
     dataType: config.dataType,
     success: success,
-    failed: function (e) {
-      console.log(e)
-    }
+    error: error
   })
 }
 // DELETE请求
-Http.deleteReq = function(url, success, fail) {
+Http.deleteReq = function(url, success, error) {
   $.ajax({
     type: 'DELETE',
     url: url,
     success: success,
-    fail: fail
+    error: error
   })
 }
 // 上传文件请求
-Http.upLoadFile = function(reqData, success, fail) {
+Http.upLoadFile = function(reqData, success, error) {
   let config = {
     contentType: reqData.contentType || Http.config.defaultConfig.contentType,
     processData: reqData.processData || Http.config.defaultConfig.processData,
@@ -61,7 +67,7 @@ Http.upLoadFile = function(reqData, success, fail) {
     data: config.data,
     url: Http.config.urls[config.url],
     success: success,
-    fail: fail
+    error: error
 
   })
 }

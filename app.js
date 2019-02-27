@@ -45,7 +45,17 @@ const rewriteUrl = require('./middlewars/rewriteUrl');
 app.use(rewriteUrl(rewriteUrlArray));
 
 // 处理静态资源,path.resolve将相对路径变为绝对路径
-app.use(require('koa-static')(staticDir));
+app.use(require('koa-static')(staticDir, {
+  setHeaders: function (res, path, stats) {
+    if (path.endsWith('.mp3')) {
+      let size = stats.size;
+      // 支持字节范围
+      res.setHeader('Accept-Ranges', 'bytes');
+      // 具体范围
+      res.setHeader('Content-Ranges', 'bytes 0-' + (size - 1) + '/' + size);
+    }
+  }
+}));
 
 // handle session start
 

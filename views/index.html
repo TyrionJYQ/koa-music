@@ -63,7 +63,7 @@
               <a href="/music/editMusic?id={{$value.id}}" class="edit">编辑</a>
             </td>
             <td>
-              <a class="del" href="javascript:void(0)"  request-href="/music/deleteMusic?id={{$value.id}}">删除</a>
+              <a class="del" href="javascript:void(0)" request-href="/music/deleteMusic?id={{$value.id}}">删除</a>
             </td>
             <td>
               <span style="cursor:pointer" src="" class="glyphicon glyphicon-play-circle ply" file="{{$value.file}}" filelrc="{{$value.filelrc}}"></span>
@@ -86,44 +86,88 @@
     </div>
   </div>
 </div>
-
+<script src="../public/common/lyrics.min.js"></script>
 
 <script>
-(function() {
-  let musics = document.querySelectorAll('a.del');
-  console.log(musics)
-  musics.forEach(music => {
-    // 绑定删除事件
-    music.addEventListener('click', function(e) {
-      let url = $(this).attr('request-href');
-      // 发送delete请求
-      Http.deleteReq(url, data => {
-        if(data.code === '002') return Swal.fire({
-          'type': 'error',
-          'title': '删除失败',
-          'text': data.msg
-        });
-        Swal.fire({
-          type: 'success',
-          text: '删除成功!',
-          title: '',
-          showConfirmButton: false
-        });
-        let tr = e.target.parentNode.parentNode;
-        tr.parentNode.removeChild(tr);
-      }, err => {
+  (function () {
+    // 根据歌词对象创建DOM
+    function _createDom(lrcs) {
+      let html = '';
+      lrcs.forEach(lrc => {
+        if (lrc.text) {
+          html += `<p time=${lrc.timestamp}>${lrc.text}</p>`
+        }
+      })
+      $('#lrc').html(html)
+    }
+    // 滚动歌词
+    function scroll(obj) {
+      // 歌曲播放的时间 
+      $('audio').on('timeupdate', function (e) {
+        let jumpPoint = Math.round(e.target.currentTime);
+        let p = $('#lrc').find(`p[time=${jumpPoint}]`);
+        if (!p || !p.offset()) return;
+        // 计算lrc容器与p的差距
+        let minus = $('#lrc').offset().top - p.offset().top;
+        // 移动lrc
+        $('#lrc').animate({
+          top: minus
+        }, 'slow');
+        // 添加高亮
+        p.addClass('gl').siblings().removeClass('gl');
+      })
+    }
+
+    $('.ply').on('click', function (e) {
+      try {
+        let file = $(this).attr('file');
+        let filelrc = $(this).attr('filelrc');
+        Http.get({ url: filelrc }, function (data) {
+          let lrcs = new Lyrics(data).lyrics_all;
+          lrcs.forEach(lrc => lrc.timestamp = Math.round(lrc.timestamp))
+          _createDom(lrcs)
+          $('#audio').attr('src', file);
+          scroll(lrcs);
+        })
+      } catch (e) {
+        console.log(e)
         Swal.fire({
           type: 'error',
-          text: data.msg,
-          title: '删除失败'
+          text: '出错了,无法播放',
+          title: ''
         })
-      })
-    });
-  })
+      }
 
-
-
-
-})();
+    })
+    let musics = document.querySelectorAll('a.del');
+    musics.forEach(music => {
+      // 绑定删除事件
+      music.addEventListener('click', function (e) {
+        let url = $(this).attr('request-href');
+        // 发送delete请求
+        Http.deleteReq(url, data => {
+          if (data.code === '002') return Swal.fire({
+            'type': 'error',
+            'title': '删除失败',
+            'text': data.msg
+          });
+          Swal.fire({
+            type: 'success',
+            text: '删除成功!',
+            title: '',
+            showConfirmButton: false
+          });
+          let tr = e.target.parentNode.parentNode;
+          tr.parentNode.removeChild(tr);
+        }, err => {
+          Swal.fire({
+            type: 'error',
+            text: data.msg,
+            title: '删除失败'
+          })
+        })
+      });
+    })
+  })();
 
 </script> {{/block}}
