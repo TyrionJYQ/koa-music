@@ -105,7 +105,7 @@
           data: { username: username }
         };
         return new Promise((res, rej) => {
-          Http.request(reqData, data => {
+          Http.post(reqData, data => {
             res(data);
           }, error => {
             rej(error);
@@ -118,7 +118,7 @@
           url: 'doRegister',
           data: data
         }
-        Http.request(reqData, data => {
+        Http.post(reqData, data => {
           if (data.code === '001') {
             Swal.fire({
               title: '注册成功',

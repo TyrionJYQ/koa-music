@@ -2,24 +2,19 @@ const Http = {}
 Http.config = {
   defaultConfig: {
     dataType: 'json',
-    methods: {
-      POST: 'POST',
-      DELETE: 'DELETE',
-      PUT: 'PUT',
-      GET: 'GET'
-    },
   },
   urls: {
     checkUsername: '/user/checkUsername',
     doRegister: '/user/doRegister',
     login: '/user/login',
-    doLogin: '/user/doLogin'
+    doLogin: '/user/doLogin',
+    deleteMusic: '/music/deleteMusic'
   }
 }
-Http.request = function (requsetData, success, failed) {
+Http.post = function (requsetData, success, failed) {
   const { defaultConfig } = Http.config;
   config = {
-    type: requsetData.type || defaultConfig.methods.POST,
+    type: 'post',
     url: Http.config.urls[requsetData.url],
     data: requsetData.data,
     dataType: requsetData.dataType || defaultConfig.dataType
@@ -33,5 +28,14 @@ Http.request = function (requsetData, success, failed) {
     failed: function (e) {
       console.log(e)
     }
+  })
+}
+// DELETE请求
+Http.deleteReq = function(url, success, fail) {
+  $.ajax({
+    type: 'DELETE',
+    url: url,
+    success: success,
+    fail: fail
   })
 }

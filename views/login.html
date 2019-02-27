@@ -74,7 +74,7 @@
           data: data,
           url: 'doLogin'
         }
-        Http.request(reqData, (data) => {
+        Http.post(reqData, (data) => {
           if (data.code === '001') {
             Swal.fire({
               title: '登录成功',
