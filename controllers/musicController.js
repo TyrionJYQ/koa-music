@@ -18,11 +18,11 @@ module.exports = {
     // 解析路径
     if (file) {
       filePath = path.parse(file.path).base;
-      filePath = '/public/files' + filePath;
+      filePath = '/public/files/' + filePath;
     }
     if (filelrc) {
       lrcPath = path.parse(filelrc.path).base;
-      lrcPath = '/public/files' + lrcPath;
+      lrcPath = '/public/files/' + lrcPath;
     }
     // 获取歌曲uid即用户id
     let uid = ctx.session.user.id;
