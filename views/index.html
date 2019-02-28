@@ -12,6 +12,7 @@
     margin-top: 10px;
     overflow: hidden;
     padding: 0;
+    border-radius: 3px;
   }
 
   #box p {
@@ -23,11 +24,13 @@
     position: absolute;
     text-align: center;
     padding-top: 60px;
+    left: 46%;
+    transform: translateX(-46%);
   }
 
   .gl {
-    color: hotpink;
-    background-color: red;
+    color: red;
+    /* background-color: red; */
   }
 </style>
 
@@ -89,6 +92,7 @@
 <script src="../public/common/lyrics.min.js"></script>
 
 <script>
+
   (function () {
     // 根据歌词对象创建DOM
     function _createDom(lrcs) {
